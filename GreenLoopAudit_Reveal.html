@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenLoopAudit — InProgress Agency</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── VARIABLES ─── */
+    :root {
+      --ip-dark:        #0f1117;
+      --ip-dark2:       #181b24;
+      --ip-green:       #1db976;
+      --ip-green-light: #d4f5e3;
+      --ip-green-mid:   #0f9a5b;
+      --ip-surface:     #f5f6f0;
+      --ip-muted:       #8c8f88;
+      --ip-border:      rgba(255,255,255,0.08);
+      --font:           'DM Sans', sans-serif;
+      --mono:           'DM Mono', monospace;
+    }
+
+    /* ─── REVEAL OVERRIDES ─── */
+    .reveal-viewport { background: var(--ip-dark); }
+    .reveal {
+      font-family: var(--font);
+      font-size: 16px;
+      color: #fff;
+    }
+    .reveal .slides { text-align: left; }
+    .reveal .slides section {
+      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .reveal h1, .reveal h2, .reveal h3 { font-family: var(--font); font-weight: 600; text-transform: none; letter-spacing: -0.02em; }
+
+    /* ─── PROGRESS & CONTROLS ─── */
+    .reveal .progress { color: var(--ip-green); height: 3px; }
+    .reveal .controls { color: var(--ip-green); }
+    .reveal .slide-number {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: transparent;
+      color: rgba(255,255,255,0.25);
+      bottom: 18px; right: 24px;
+    }
+
+    /* ─── SLIDE WRAPPER ─── */
+    .slide-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 72px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── SLIDE LABEL (top-left) ─── */
+    .slide-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ip-green);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* ─── SLIDE TITLE ─── */
+    .stitle {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 32px;
+      line-height: 1.15;
+    }
+    .stitle em { font-style: normal; color: var(--ip-green); }
+
+    /* ════════════════════════════════
+       SLIDE 1 — COVER
+    ════════════════════════════════ */
+    .slide-cover { background: var(--ip-dark); }
+    .cover-blob1 {
+      position: absolute; top: -120px; right: -120px;
+      width: 480px; height: 480px;
+      background: var(--ip-green);
+      border-radius: 50%;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .cover-blob2 {
+      position: absolute; bottom: -80px; left: -80px;
+      width: 260px; height: 260px;
+      background: var(--ip-green);
+      border-radius: 50%;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(29,185,118,0.12);
+      border: 1px solid rgba(29,185,118,0.28);
+      color: var(--ip-green);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 28px;
+    }
+    .cover-badge-dot { width: 6px; height: 6px; background: var(--ip-green); border-radius: 50%; }
+    .cover-h1 {
+      font-size: clamp(48px, 7vw, 80px);
+      font-weight: 600;
+      line-height: 1;
+      color: #fff;
+      margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .cover-h1 span { color: var(--ip-green); }
+    .cover-sub {
+      font-size: clamp(14px, 1.5vw, 17px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+      margin-bottom: 48px;
+      position: relative; z-index: 1;
+    }
+    .cover-meta {
+      display: flex; gap: 36px; flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .cover-meta-item { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.6; }
+    .cover-meta-item strong { display: block; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); }
+
+    /* ════════════════════════════════
+       SLIDE 2 — CONSTAT
+    ════════════════════════════════ */
+    .slide-constat { background: var(--ip-dark2); }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-left: 3px solid var(--ip-green);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .stat-num {
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .stat-num span { color: var(--ip-green); }
+    .stat-desc { font-size: 12px; color: rgba(255,255,255,0.42); line-height: 1.55; }
+    .constat-quote {
+      background: rgba(29,185,118,0.07);
+      border: 1px solid rgba(29,185,118,0.18);
+      border-radius: 14px;
+      padding: 20px 24px;
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+    }
+    .constat-quote::before { content: '« '; color: var(--ip-green); font-size: 22px; font-weight: 600; }
+
+    /* ════════════════════════════════
+       SLIDE 3 — SOLUTION
+    ════════════════════════════════ */
+    .slide-solution { background: var(--ip-dark); }
+    .solution-hero {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 20px;
+    }
+    .solution-icon {
+      width: 56px; height: 56px;
+      background: rgba(29,185,118,0.12);
+      border: 1.5px solid rgba(29,185,118,0.28);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .solution-name { font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .solution-name span { color: var(--ip-green); }
+    .solution-desc { font-size: 13px; color: rgba(255,255,255,0.45); font-weight: 300; line-height: 1.6; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .feature {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .f-dot { width: 8px; height: 8px; background: var(--ip-green); border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .f-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.55; }
+    .f-text strong { display: block; color: #fff; font-weight: 500; margin-bottom: 2px; }
+
+    /* ════════════════════════════════
+       SLIDE 4 — PARTIES PRENANTES
+    ════════════════════════════════ */
+    .slide-stakeholders { background: var(--ip-dark2); }
+    .stakeholders-row {
+      display: flex; gap: 10px; flex-wrap: nowrap;
+      margin-bottom: 22px;
+    }
+    .stakeholder {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+    }
+    .s-icon {
+      width: 40px; height: 40px;
+      background: rgba(29,185,118,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 18px;
+    }
+    .s-title { font-size: 12px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+    .s-role { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.4; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 18px;
+    }
+    .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+    .divider-tag {
+      font-size: 11px; font-weight: 500;
+      color: var(--ip-green);
+      background: rgba(29,185,118,0.1);
+      padding: 4px 12px; border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--ip-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .tl-phase {
+      padding: 18px 20px;
+      border-right: 1px solid var(--ip-border);
+    }
+    .tl-phase:last-child { border-right: none; }
+    .tl-period { font-family: var(--mono); font-size: 10px; color: var(--ip-green); letter-spacing: 0.05em; margin-bottom: 5px; }
+    .tl-name { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 8px; }
+    .tl-actions { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.7; }
+
+    /* ════════════════════════════════
+       SLIDE 5 — IMPACT
+    ════════════════════════════════ */
+    .slide-impact { background: var(--ip-dark); }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .impact-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .impact-card.green-card {
+      background: rgba(29,185,118,0.07);
+      border-color: rgba(29,185,118,0.18);
+    }
+    .impact-cat {
+      font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase;
+      font-weight: 500; margin-bottom: 14px;
+      color: rgba(255,255,255,0.35);
+    }
+    .impact-card.green-card .impact-cat { color: var(--ip-green); }
+    .kpi-list { display: flex; flex-direction: column; gap: 9px; }
+    .kpi-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: rgba(255,255,255,0.6); }
+    .kpi-val { font-family: var(--mono); font-size: 12px; color: var(--ip-green); flex-shrink: 0; margin-left: 10px; }
+    .kpi-bar-wrap { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .kpi-bar { height: 3px; background: var(--ip-green); border-radius: 2px; }
+
+    .note-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-left: 3px solid var(--ip-green);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+    }
+    .note-box strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    /* ════════════════════════════════
+       SLIDE 6 — CLOSING
+    ════════════════════════════════ */
+    .slide-close { background: var(--ip-dark2); }
+    .close-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .close-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--ip-border);
+      border-radius: 14px;
+      padding: 20px 18px;
+    }
+    .close-label { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ip-green); margin-bottom: 10px; }
+    .close-val { font-size: 28px; font-weight: 600; color: #fff; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .close-val .sub { font-size: 14px; color: var(--ip-green); display: inline; }
+    .close-desc { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.5; }
+    .close-bottom {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .close-agency { font-size: 28px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+    .close-agency span { color: var(--ip-green); }
+    .close-sub { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 5px; }
+    .close-version { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.2); text-align: right; }
+
+    /* ─── FRAGMENT ANIMATIONS ─── */
+    .reveal .fragment.fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .reveal .fragment.fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ══════════════ SLIDE 1 — COVER ══════════════ -->
+    <section class="slide-cover">
+      <div class="slide-inner" style="justify-content: center;">
+        <div class="cover-blob1"></div>
+        <div class="cover-blob2"></div>
+
+        <div class="cover-badge fragment fade-up" data-fragment-index="0">
+          <div class="cover-badge-dot"></div>
+          Numérique Responsable · 2025
+        </div>
+
+        <div class="cover-h1 fragment fade-up" data-fragment-index="1" style="position:relative;z-index:1;">
+          GreenLoop<span>Audit</span>
+        </div>
+
+        <div class="cover-sub fragment fade-up" data-fragment-index="2">
+          Réduire l'empreinte numérique des campagnes digitales<br>
+          au sein d'InProgress Agency
+        </div>
+
+        <div class="cover-meta fragment fade-up" data-fragment-index="3">
+          <div class="cover-meta-item">
+            <strong>InProgress Agency</strong>Chef de Projet &amp; PO
+          </div>
+          <div class="cover-meta-item">
+            <strong>Durée</strong>6 mois · MVP → pilote
+          </div>
+          <div class="cover-meta-item">
+            <strong>Format</strong>Présentation 5 min
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SLIDE 2 — CONSTAT ══════════════ -->
+    <section class="slide-constat">
+      <div class="slide-inner">
+        <div class="slide-label">01 / 05</div>
+        <div class="stitle">Le constat : <em>un angle mort dans nos campagnes</em></div>
+
+        <div class="stat-row">
+          <div class="stat-card fragment fade-up" data-fragment-index="0">
+            <div class="stat-num">4<span>%</span></div>
+            <div class="stat-desc">Des émissions mondiales de CO₂ proviennent du numérique — autant que l'aviation civile</div>
+          </div>
+          <div class="stat-card fragment fade-up" data-fragment-index="1">
+            <div class="stat-num">~<span>3g</span></div>
+            <div class="stat-desc">CO₂ émis par e-mail avec pièce jointe lourde — multiplié par les volumes d'une agence</div>
+          </div>
+          <div class="stat-card fragment fade-up" data-fragment-index="2">
+            <div class="stat-num">0<span>%</span></div>
+            <div class="stat-desc">Des briefs clients actuels n'incluent de critère d'écoconception numérique chez InProgress</div>
+          </div>
+        </div>
+
+        <div class="constat-quote fragment fade-up" data-fragment-index="3">
+          Chez InProgress, nous livrons des campagnes, des apps, des contenus — sans jamais mesurer leur poids environnemental réel. Ni nous, ni nos clients, ni nos partenaires.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SLIDE 3 — SOLUTION ══════════════ -->
+    <section class="slide-solution">
+      <div class="slide-inner">
+        <div class="slide-label">02 / 05</div>
+        <div class="stitle">Le projet : <em>GreenLoopAudit</em></div>
+
+        <div class="solution-hero fragment fade-up" data-fragment-index="0">
+          <div class="solution-icon">⚡</div>
+          <div>
+            <div class="solution-name">Green<span>Loop</span>Audit</div>
+            <div class="solution-desc">Un outil d'audit interne et client qui mesure, visualise et réduit l'empreinte carbone de nos livrables numériques — intégré directement dans nos process projet.</div>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature fragment fade-up" data-fragment-index="1">
+            <div class="f-dot"></div>
+            <div class="f-text"><strong>Audit de livrables</strong>Score environnemental automatique sur chaque livrable (site, email, app, asset)</div>
+          </div>
+          <div class="feature fragment fade-up" data-fragment-index="2">
+            <div class="f-dot"></div>
+            <div class="f-text"><strong>Dashboard client</strong>Rapport CO₂ partagé avec les clients à chaque fin de sprint ou de campagne</div>
+          </div>
+          <div class="feature fragment fade-up" data-fragment-index="3">
+            <div class="f-dot"></div>
+            <div class="f-text"><strong>Recommandations actionnables</strong>Compression d'images, optimisation de code, nettoyage d'assets</div>
+          </div>
+          <div class="feature fragment fade-up" data-fragment-index="4">
+            <div class="f-dot"></div>
+            <div class="f-text"><strong>Démarche de labellisation</strong>Trajectoire vers le référentiel RGESN et la certification GreenIT</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SLIDE 4 — PARTIES PRENANTES ══════════════ -->
+    <section class="slide-stakeholders">
+      <div class="slide-inner">
+        <div class="slide-label">03 / 05</div>
+        <div class="stitle">Parties prenantes <em>&amp; feuille de route</em></div>
+
+        <div class="stakeholders-row">
+          <div class="stakeholder fragment fade-up" data-fragment-index="0">
+            <div class="s-icon">🏢</div>
+            <div class="s-title">Direction</div>
+            <div class="s-role">Validation stratégique, ressources</div>
+          </div>
+          <div class="stakeholder fragment fade-up" data-fragment-index="1">
+            <div class="s-icon">🎨</div>
+            <div class="s-title">Équipes projet</div>
+            <div class="s-role">Intégration workflows créatifs</div>
+          </div>
+          <div class="stakeholder fragment fade-up" data-fragment-index="2">
+            <div class="s-icon">🤝</div>
+            <div class="s-title">Clients</div>
+            <div class="s-role">Pilote 2–3 clients volontaires</div>
+          </div>
+          <div class="stakeholder fragment fade-up" data-fragment-index="3">
+            <div class="s-icon">🌿</div>
+            <div class="s-title">GreenIT / INR</div>
+            <div class="s-role">Référentiels RGESN</div>
+          </div>
+          <div class="stakeholder fragment fade-up" data-fragment-index="4">
+            <div class="s-icon">📐</div>
+            <div class="s-title">Dev &amp; Ops</div>
+            <div class="s-role">Intégration CI/CD</div>
+          </div>
+        </div>
+
+        <div class="divider fragment fade-up" data-fragment-index="5">
+          <div class="divider-line"></div>
+          <div class="divider-tag">Calendrier sur 6 mois</div>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="timeline fragment fade-up" data-fragment-index="5">
+          <div class="tl-phase">
+            <div class="tl-period">M1 – M2</div>
+            <div class="tl-name">Diagnostic &amp; cadrage</div>
+            <div class="tl-actions">Audit interne des livrables<br>Benchmark outils<br>Périmètre pilote</div>
+          </div>
+          <div class="tl-phase">
+            <div class="tl-period">M3 – M4</div>
+            <div class="tl-name">Déploiement MVP</div>
+            <div class="tl-actions">1 projet client pilote<br>Rapport CO₂ client<br>Formation équipes</div>
+          </div>
+          <div class="tl-phase">
+            <div class="tl-period">M5 – M6</div>
+            <div class="tl-name">Généralisation</div>
+            <div class="tl-actions">Tous les projets<br>Communication externe<br>Plan de labellisation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SLIDE 5 — IMPACT ══════════════ -->
+    <section class="slide-impact">
+      <div class="slide-inner">
+        <div class="slide-label">04 / 05</div>
+        <div class="stitle">Mesure de l'impact : <em>indicateurs clés</em></div>
+
+        <div class="impact-grid">
+          <div class="impact-card green-card fragment fade-up" data-fragment-index="0">
+            <div class="impact-cat">Indicateurs quantitatifs</div>
+            <div class="kpi-list">
+              <div class="kpi-row"><span>Poids moyen d'un livrable</span><span class="kpi-val">−30%</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:70%"></div></div>
+              <div class="kpi-row"><span>Score EcoIndex par projet</span><span class="kpi-val">≥ B</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:80%"></div></div>
+              <div class="kpi-row"><span>Émissions CO₂ / projet</span><span class="kpi-val">mesurées</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:60%"></div></div>
+              <div class="kpi-row"><span>Livrables audités / total</span><span class="kpi-val">100%</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:100%"></div></div>
+            </div>
+          </div>
+
+          <div class="impact-card fragment fade-up" data-fragment-index="1">
+            <div class="impact-cat">Indicateurs qualitatifs</div>
+            <div class="kpi-list">
+              <div class="kpi-row"><span>Clients informés de leur empreinte</span><span class="kpi-val">✓</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:90%"></div></div>
+              <div class="kpi-row"><span>Sensibilisation équipes internes</span><span class="kpi-val">✓</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:85%"></div></div>
+              <div class="kpi-row"><span>Différenciation concurrentielle</span><span class="kpi-val">✓</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:75%"></div></div>
+              <div class="kpi-row"><span>Trajectoire RGESN / INR</span><span class="kpi-val">✓</span></div>
+              <div class="kpi-bar-wrap"><div class="kpi-bar" style="width:65%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-box fragment fade-up" data-fragment-index="2">
+          <strong>Faisabilité :</strong> Outils open-source (EcoIndex, GreenIT Analysis, Lighthouse). <strong>0€ d'outillage</strong> en phase MVP — ~2h/semaine par PM. ROI indirect : différenciation commerciale, appels d'offres RSE, fidélisation clients engagés.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SLIDE 6 — CLOSING ══════════════ -->
+    <section class="slide-close">
+      <div class="slide-inner">
+        <div class="slide-label">05 / 05</div>
+
+        <div class="close-grid">
+          <div class="close-card fragment fade-up" data-fragment-index="0">
+            <div class="close-label">Besoin identifié</div>
+            <div class="close-val" style="font-size:20px; line-height:1.2;">Angle mort<br>carbone</div>
+            <div class="close-desc">Livrables jamais mesurés sur leur impact environnemental</div>
+          </div>
+          <div class="close-card fragment fade-up" data-fragment-index="1">
+            <div class="close-label">Solution concrète</div>
+            <div class="close-val">MVP <span class="sub">6 mois</span></div>
+            <div class="close-desc">Outil d'audit intégré dans nos projets, visible par les clients</div>
+          </div>
+          <div class="close-card fragment fade-up" data-fragment-index="2">
+            <div class="close-label">Impact mesurable</div>
+            <div class="close-val">−30%</div>
+            <div class="close-desc">Réduction du poids moyen des livrables dès la 1ère année</div>
+          </div>
+        </div>
+
+        <div class="close-bottom fragment fade-up" data-fragment-index="3">
+          <div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.22); margin-bottom:6px; letter-spacing:0.06em; text-transform:uppercase;">Porté par</div>
+            <div class="close-agency">In<span>Progress</span> Agency</div>
+            <div class="close-sub">Numérique Responsable · 2025</div>
+          </div>
+          <div class="close-version">
+            GreenLoopAudit<br>v1.0 · MVP
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<!-- Reveal.js core -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0,
+    minScale: 0.2,
+    maxScale: 2.0,
+    controls: true,
+    controlsTutorial: false,
+    progress: true,
+    keyboard: true,
+    overview: true,
+    touch: true,
+    fragments: true,
+    autoAnimateEasing: 'ease',
+    autoAnimateDuration: 0.4,
+  });
+</script>
+
+</body>
+</html>
