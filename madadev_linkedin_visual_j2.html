@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visuel LinkedIn J+1 — MadaDev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #070710;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'DM Sans', sans-serif;
+      padding: 32px 16px;
+    }
+
+    .card {
+      position: relative;
+      background: #0f0f1a;
+      border-radius: 20px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: 1.91 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(36px, 6vw, 80px);
+    }
+
+    /* Déco fond */
+    .glow-top {
+      position: absolute;
+      top: -140px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .glow-bottom-left {
+      position: absolute;
+      bottom: -80px; left: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,158,11,0.09) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .glow-bottom-right {
+      position: absolute;
+      bottom: -60px; right: -40px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    /* Ligne horizontale déco */
+    .line-h {
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(99,102,241,0.15), transparent);
+      pointer-events: none;
+    }
+
+    /* Contenu */
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Badge en haut */
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: clamp(20px, 3.5vw, 40px);
+      animation: fadeUp 0.5s ease both;
+    }
+    .logo-icon {
+      width: clamp(22px, 2.5vw, 30px);
+      height: clamp(22px, 2.5vw, 30px);
+      border-radius: 6px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-icon svg {
+      width: 55%; height: 55%;
+    }
+    .logo-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(12px, 1.4vw, 16px);
+      color: rgba(226,232,240,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* Question principale */
+    .question-label {
+      font-size: clamp(10px, 1vw, 12px);
+      color: rgba(226,232,240,0.3);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: clamp(12px, 2vw, 20px);
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .question {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(26px, 5.5vw, 62px);
+      line-height: 1.1;
+      color: #e2e8f0;
+      margin-bottom: clamp(8px, 1.5vw, 16px);
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .question .gradient {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .question .accent {
+      color: #f59e0b;
+      -webkit-text-fill-color: #f59e0b;
+    }
+
+    /* Sous-titre */
+    .sub {
+      font-size: clamp(12px, 1.4vw, 16px);
+      color: #94a3b8;
+      line-height: 1.65;
+      max-width: 520px;
+      margin-bottom: clamp(20px, 3.5vw, 40px);
+      animation: fadeUp 0.6s 0.35s ease both;
+    }
+
+    /* URL bas */
+    .url-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+    .url-bar {
+      width: 36px; height: 1px;
+      background: linear-gradient(to right, #6366f1, #f59e0b);
+    }
+    .url-text {
+      font-size: clamp(10px, 1.1vw, 13px);
+      color: rgba(226,232,240,0.25);
+      letter-spacing: 0.06em;
+    }
+
+    /* Coin décoratif */
+    .corner {
+      position: absolute;
+      width: clamp(30px, 4vw, 52px);
+      height: clamp(30px, 4vw, 52px);
+      opacity: 0.25;
+    }
+    .corner-tl { top: clamp(16px, 2.5vw, 28px); left: clamp(16px, 2.5vw, 28px); border-top: 1.5px solid #6366f1; border-left: 1.5px solid #6366f1; border-radius: 4px 0 0 0; }
+    .corner-tr { top: clamp(16px, 2.5vw, 28px); right: clamp(16px, 2.5vw, 28px); border-top: 1.5px solid #6366f1; border-right: 1.5px solid #6366f1; border-radius: 0 4px 0 0; }
+    .corner-bl { bottom: clamp(16px, 2.5vw, 28px); left: clamp(16px, 2.5vw, 28px); border-bottom: 1.5px solid #6366f1; border-left: 1.5px solid #6366f1; border-radius: 0 0 0 4px; }
+    .corner-br { bottom: clamp(16px, 2.5vw, 28px); right: clamp(16px, 2.5vw, 28px); border-bottom: 1.5px solid #6366f1; border-right: 1.5px solid #6366f1; border-radius: 0 0 4px 0; }
+
+    /* Hint */
+    .hint {
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.2);
+      text-align: center;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="glow-top"></div>
+    <div class="glow-bottom-left"></div>
+    <div class="glow-bottom-right"></div>
+    <div class="line-h"></div>
+
+    <svg class="grid-bg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+          <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#6366f1" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+
+    <!-- Coins décoratifs -->
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div class="content">
+
+      <div class="badge-top">
+        <div class="logo-icon">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="6" height="6" rx="1.5" fill="white"/>
+            <rect x="9" y="1" width="6" height="6" rx="1.5" fill="white" opacity="0.5"/>
+            <rect x="1" y="9" width="6" height="6" rx="1.5" fill="white" opacity="0.5"/>
+            <rect x="9" y="9" width="6" height="6" rx="1.5" fill="white"/>
+          </svg>
+        </div>
+        <span class="logo-name">MadaDev</span>
+      </div>
+
+      <p class="question-label">La première question que je pose</p>
+
+      <h1 class="question">
+        À qui vous voulez<br>
+        <span class="gradient">vraiment</span> parler <span class="accent">?</span>
+      </h1>
+
+      <p class="sub">
+        Un site sans cette réponse, c'est une belle vitrine<br>dans une rue que personne ne prend.
+      </p>
+
+      <div class="url-row">
+        <div class="url-bar"></div>
+        <span class="url-text">mada-dev.com</span>
+        <div class="url-bar" style="background: linear-gradient(to right, #f59e0b, #6366f1);"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="hint">Ouvre dans Chrome · Screenshot ou Imprimer en PDF pour exporter</p>
+
+</body>
+</html>
